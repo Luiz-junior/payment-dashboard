@@ -1,5 +1,3 @@
-
-
 ## Payment Dashboard Test
 
 ### `yarn or npm install`
