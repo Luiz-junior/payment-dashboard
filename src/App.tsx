@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import { transactionStore } from "./store/transactionStore";
+import TransactionList from "./components/TransactionList";
+import Filter from "./components/Filter";
+import { Container, Header, ErrorMessage } from "./styles";
+import { transactionsMock } from "./api";
 
-function App() {
+const App: React.FC = () => {
+  useEffect(() => {
+    transactionStore.setTransactions(transactionsMock);
+  }, []);
+
+  const handleFilter = (startDate: string, endDate: string) => {
+    transactionStore.filterTransactions(startDate, endDate);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Header>Payment Transaction Dashboard</Header>
+      <Filter onFilter={handleFilter} />
+      {transactionStore.error && (
+        <ErrorMessage>{transactionStore.error}</ErrorMessage>
+      )}
+      <TransactionList transactions={transactionStore.filteredTransactions} />
+    </Container>
   );
-}
+};
 
-export default App;
+export default observer(App);
